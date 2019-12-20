@@ -1,0 +1,53 @@
+// Код для ведомой платы
+#include <Wire.h>
+#define PIN_MOD 1
+#define LED_PIN1 10
+#define LED_PIN2 11
+#define LED_PIN3 12
+
+int i;
+int mass[3]= {LED_PIN1,LED_PIN2,LED_PIN3};
+void setup() {
+  pinMode (13, OUTPUT); // Светодиод на пин (pin) 13
+  Wire.begin(9); // 9 здесь адрес (упоминается также в коде основной платы) 
+  Wire.onReceive(receiveEvent);
+  Serial.begin(9600);
+
+  pinMode(PIN_MOD, OUTPUT);
+  pinMode(LED_PIN1, OUTPUT);
+  pinMode(LED_PIN2, OUTPUT);
+  pinMode(LED_PIN3, OUTPUT);
+}
+
+void loop(){
+  receiveEvent();
+}  
+
+int light=0;
+  
+void receiveEvent() {
+  i = Wire.read(); // Получите значения от основной платы
+  
+  func(i);
+   delay(3000);
+}
+
+
+
+void func(int i) {
+  if (i>=3 and light<3)
+  { 
+      digitalWrite(mass[i-3], HIGH);
+      light++;
+
+  }
+  else if (i>=3 and light>=3) 
+  {
+      digitalWrite(mass[i-3], LOW);
+      light++;
+      if (light>=6)
+        light=0;
+  }
+  Serial.println(i);
+  Serial.println(light);
+ }
