@@ -26,7 +26,7 @@ void loop(){
 int light=0;
  
 void receiveEvent() {
-  i = Wire.read(); // Получите значения от основной платы
+  i = Wire.read(); // Получение значения от основной платы
  
   func(i);
    delay(3000);
