@@ -1,1 +1,66 @@
+#define PIN_MOD 10
+#define LED_PIN1 11
+#define LED_PIN2 12
+#define LED_PIN3 A1
+#include <Wire.h>
 
+bool pressed=false;
+int pins[3]= {LED_PIN1,LED_PIN2,LED_PIN3};
+int i=0;
+int light=0;
+int x=0;
+
+void setup() {
+Wire.begin();
+Serial.begin(9600);
+pinMode(PIN_MOD, OUTPUT);
+pinMode(LED_PIN1, OUTPUT);
+pinMode(LED_PIN2, OUTPUT);
+pinMode(LED_PIN3, OUTPUT);
+}
+
+void loop() {
+digitalWrite(PIN_MOD, HIGH);
+bool first = digitalRead(PIN_MOD);
+delay(100);
+bool second = digitalRead(PIN_MOD);
+if (first!=second and second==true)
+pressed =true;
+
+
+if (pressed==true and light==0)
+{
+if (i>=3 and i!=6)
+{
+Wire.beginTransmission(9);
+Wire.write(i);
+Wire.endTransmission();
+
+}
+digitalWrite(pins[i], HIGH);
+Serial.println(light);
+Serial.println(i);
+i++;
+pressed=false;
+if (i==6)
+{light=1; i--;}
+
+}
+else if (pressed==true and light==1)
+{
+if (i<=5 and i>=3)
+{
+Wire.beginTransmission(9);
+Wire.write(i);
+Wire.endTransmission();
+}
+digitalWrite(pins[i], LOW);
+Serial.println(light);
+Serial.println(i);
+i--;
+pressed=false;
+if (i==-1)
+{light=0; i++;}
+
+}
+}
